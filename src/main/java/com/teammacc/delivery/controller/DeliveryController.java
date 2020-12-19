@@ -5,6 +5,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -22,18 +24,39 @@ public class DeliveryController {
 	@Autowired
 	public DeliveryController(DeliveryService deliveryService) {
 		this.deliveryService = deliveryService;
+		this.deliveryService.populate();
 	}
 	
-	@GetMapping(produces = {"application/json","application/xml","application/x-yaml"})
-	public DeliveryVO deliveryProducts(@RequestBody String body) {
-		
-		JSONObject deliveryInfo = new JSONObject(body);
-
-		String address = deliveryInfo.getString("address");
-		Long orderId = deliveryInfo.getLong("order_id");
-		
-		return deliveryService.deliveryProducts(body);
+	@GetMapping(value="{orderId}" ,produces = {"application/json","application/xml","application/x-yaml"})
+	public DeliveryVO getDelivery(@PathVariable String orderId) {
+	
+		return deliveryService.getDelivery(orderId);
 		
 	}
+	
+	@PostMapping(value="/create" ,produces = {"application/json","application/xml","application/x-yaml"})
+	public DeliveryVO createDelivery(@RequestBody String body) {
+		
+		JSONObject deliveryInfo = new JSONObject(body);
+		String address = deliveryInfo.getString("address");
+		String orderId = deliveryInfo.getString("order_id");
+		
+		return deliveryService.createNewDelivery(orderId, address);
+		
+	}
+	
+	@PutMapping(value="/status" ,produces = {"application/json","application/xml","application/x-yaml"})
+	public DeliveryVO updateDeliveryStatus(@RequestBody String body) {
+		
+		JSONObject deliveryInfo = new JSONObject(body);
+		String status = deliveryInfo.getString("status");
+		String orderId = deliveryInfo.getString("order_id");
+		
+		return deliveryService.changeStatus(orderId, status);
+		
+	}
+	
+	
+	
 
 }

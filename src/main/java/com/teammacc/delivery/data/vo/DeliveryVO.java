@@ -2,16 +2,13 @@ package com.teammacc.delivery.data.vo;
 
 import java.io.Serializable;
 
-import org.modelmapper.ModelMapper;
-import org.springframework.hateoas.RepresentationModel;
-
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
-import com.teammacc.delivery.entity.Delivery;
+
 
 
 @JsonPropertyOrder({"id","address", "status"})
-public class DeliveryVO extends RepresentationModel<DeliveryVO> implements Serializable {
+public class DeliveryVO implements Serializable {
 
 	private static final long serialVersionUID = -5642252379268168941L;
 	
@@ -48,9 +45,5 @@ public class DeliveryVO extends RepresentationModel<DeliveryVO> implements Seria
 		this.address = address;
 	}
 
-	public static DeliveryVO create(Delivery delivery) {
-		
-		return new ModelMapper().map(delivery, DeliveryVO.class);
-	}
 	
 }
