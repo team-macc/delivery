@@ -1,0 +1,38 @@
+kind: Service
+apiVersion: v1
+metadata:
+  name: delivery
+  labels:
+    app: delivery
+spec:
+  selector:
+    app: delivery
+  ports:
+    - port: 8080
+      name: http
+  type: NodePort
+---
+kind: Deployment
+apiVersion: apps/v1
+metadata:
+  name: delivery
+spec:
+  selector:
+    matchLabels:
+      app: delivery
+  replicas: 1
+  template:
+    metadata:
+      annotations: 
+        sidecar.istio.io/inject: "true"      
+      labels:
+        app: delivery
+        version: v1
+    spec:
+      containers:
+      - name: delivery
+        image: samuelpereiradesouza/delivery:1
+        ports:
+        - containerPort: 8080
+      restartPolicy: Always
+---
